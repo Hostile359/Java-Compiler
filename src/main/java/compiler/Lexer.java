@@ -227,7 +227,7 @@ public class Lexer {
             return new Token("Num_16", lexeme, this.line, start);
         else if(lexeme.matches("0[0-7]+"))
             return new Token("Num_8", lexeme, this.line, start);
-        else if(lexeme.matches("\\d*"))
+        else if(lexeme.matches("[1-9]\\d+"))
             return new Token("Num", lexeme, this.line, start);
         else
             return new Token("Unknown_token", lexeme, this.line, start);
