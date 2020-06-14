@@ -1,5 +1,5 @@
-public class Sub{
-    public static void main() {
+ void main() {
+
         String str = "asdfs=aasg";
         String substr = System.in.read();
         int n = str.length();
@@ -15,14 +15,14 @@ public class Sub{
                         index = -1;
                         break;
                     }
-                    j++;
-                    i++;
+                    j = i + 1;
+                    i = i + 1;
                 }
-                if(index != -1)
+                if(index != -1){
                     break;
+                }
             }
-            i++;
+            i = i + 1;
         }
         System.out.println(index);
     }
-}

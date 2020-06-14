@@ -17,8 +17,8 @@ public class Lexer {
     Lexer(){
         this.tokens = new ArrayList<>();
         this.line = 0;
-
     }
+
 
     public void print_Tokens(){
         for(Token tok : this.tokens){
@@ -102,13 +102,15 @@ public class Lexer {
                 if(this.index + 1 != this.filestr.length() && this.filestr.charAt(this.index + 1) == '='){
                     this.index++;
                     return new Token("OP_NOTEQ", "!=", this.line, this.index - 1);
+                }else{
+                    return new Token("Unknown_token", "!", this.line, this.index);
                 }
             }else if(c == '='){
                 if(this.index + 1 != this.filestr.length() && this.filestr.charAt(this.index + 1) == '='){
                     this.index++;
                     return new Token("OP_EQ", "==", this.line, this.index - 1);
                 }else {
-                    return new Token("Assigment", "=", this.line, this.index);
+                    return new Token("Assign", "=", this.line, this.index);
                 }
             }else if(c == '|'){
                 if(this.index + 1 != this.filestr.length() && this.filestr.charAt(this.index + 1) == '|'){
@@ -164,10 +166,8 @@ public class Lexer {
         if(lexeme.indexOf('.') != -1){
             switch (lexeme) {
                 case "System.out.print":
-                    return new Token("Identifier", lexeme, this.line, start);
-                case "System.out.println":
-                    return new Token("Identifier", lexeme, this.line, start);
                 case "System.in.read":
+                case "System.out.println":
                     return new Token("Identifier", lexeme, this.line, start);
                 default:
                     return new Token("Unknown_token", lexeme, this.line, start);
