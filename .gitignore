@@ -3,3 +3,5 @@ compiler.iml
 he.java
 target
 test.java
+ASM
+bin
