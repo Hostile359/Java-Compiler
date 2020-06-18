@@ -116,11 +116,15 @@ public class Lexer {
                 if(this.index + 1 != this.filestr.length() && this.filestr.charAt(this.index + 1) == '|'){
                     this.index++;
                     return new Token("OR", "||", this.line, this.index - 1);
+                }else{
+                    return new Token("Unknown_token", "|", this.line, this.index);
                 }
             }else if(c == '&'){
                 if(this.index + 1 != this.filestr.length() && this.filestr.charAt(this.index + 1) == '&'){
                     this.index++;
                     return new Token("AND", "&&", this.line, this.index - 1);
+                }else{
+                    return new Token("Unknown_token", "&", this.line, this.index);
                 }
             }else if(c == '"'){
 				return this.get_literal();
