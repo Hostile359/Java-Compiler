@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 public class SymbolTable {
     private SymbolTable prevLevelTable;
+    private int nextLevelTableIndex;
 //    private HashMap<String, LinkedList<Id>> symbolTable;
     private HashMap<String, Id> symbolTable;
     private LinkedList<SymbolTable> nextLevelTables;
@@ -12,6 +13,7 @@ public class SymbolTable {
 
     public SymbolTable() {
         prevLevelTable = null;
+        nextLevelTableIndex = 0;
         symbolTable = new HashMap<>();
         symbolTable.put("System.out.println", new Id("System.out.println", "void", 0, true));
         symbolTable.put("System.out.print", new Id("System.out.print", "void", 0, true));
@@ -22,22 +24,26 @@ public class SymbolTable {
 
     public SymbolTable(SymbolTable prevLevelTable) {
         this.prevLevelTable = prevLevelTable;
+        nextLevelTableIndex = 0;
         symbolTable = new HashMap<>();
         nextLevelTables = new LinkedList<>();
         //error = 0;
     }
 
-    public void addNextLevelTable(){
+    public SymbolTable addNextLevelTable(){
         nextLevelTables.add(new SymbolTable(this));
+        return nextLevelTables.getLast();
     }
 
     public SymbolTable getNextLevelTable(){
-        return nextLevelTables.getLast();
+        nextLevelTableIndex++;
+        return nextLevelTables.get(nextLevelTableIndex - 1);
+//        return nextLevelTables.getLast();
     }
 
     public SymbolTable getPrevLevelTable(){
         if(symbolTable.size() == 0){
-            symbolTable.put(null, new Id(null, null, 0));
+            symbolTable.put(null, new Id(null, "", 0, false));
         }
 //            prevLevelTable.nextLevelTables.pop();
         return prevLevelTable;

@@ -1,5 +1,7 @@
 package compiler.AST;
 
+import compiler.Id;
+
 import java.util.List;
 
 public class ArrayNode extends Node {
@@ -7,15 +9,46 @@ public class ArrayNode extends Node {
 
     public ArrayNode(List<Node> members) {
         this.members = members;
+        this.type = "Array";
     }
 
-    public String getNodeType(){
-        return "Array";
-    }
+//    public String getNodeType(){
+//        return "Array";
+//    }
 
     public void makeSymTab(int level){
+        Id id = symbolTable.getVariable(initVarName);
+        int arrayOffset = members.size() * 4;
+        id.setAsmOffset(arrayOffset);
         members.forEach(member -> {if(member!=null) member.makeSymTab(level);});
     }
+
+    public String makeASM(){
+        int arrayOffset = symbolTable.getVariable(initVarName).getAsmOffset();
+        for(Node member : members){
+            String leftOperand = "DWORD PTR [rbp-" + arrayOffset + "]";
+            String rightOperand = member.makeASM();
+            switch (member.getType()){
+                case "Number":
+//                command = "\tmov     " + leftOperand + ", " + rightOperand + "\n";
+//                System.out.println(command);
+                    asm.addMainCommand("\tmov     " + leftOperand + ", " + rightOperand + "\n");
+                    break;
+                case "Variable":
+//                command = "\tmov     eax, " + rightOperand + "\n";
+                    asm.addMainCommand("\tmov     eax, " + rightOperand + "\n");
+//                command = "\tmov     " + leftOperand + ", eax\n";
+                    asm.addMainCommand("\tmov     " + leftOperand + ", eax\n");
+                    break;
+                case "Arith":
+                    asm.addMainCommand("\tmov     " + leftOperand + ", " + rightOperand + "\n");
+                    break;
+            }
+            arrayOffset -= 4;
+        }
+        return "";
+    }
+
     public void printNode(int level) {
         this.printTabs(level);
         System.out.println("[ARRAY]");

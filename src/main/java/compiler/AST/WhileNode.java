@@ -7,6 +7,7 @@ public class WhileNode extends Node {
     public WhileNode(Node conditionNode, BodyNode bodyNode) {
         this.conditionNode = conditionNode;
         this.bodyNode = bodyNode;
+        this.type = "While";
     }
 
     public Node getConditionNode() {
@@ -17,9 +18,9 @@ public class WhileNode extends Node {
         return bodyNode;
     }
 
-    public String getNodeType(){
-        return "While";
-    }
+//    public String getNodeType(){
+//        return "While";
+//    }
 
     public void makeSymTab(int level) {
         typeForCheck = "int";
@@ -27,11 +28,50 @@ public class WhileNode extends Node {
             conditionNode.makeSymTab(level);
         typeForCheck = "def";
 
-        symbolTable.addNextLevelTable();
-        symbolTable = symbolTable.getNextLevelTable();
+        symbolTable = symbolTable.addNextLevelTable();
+        //symbolTable = symbolTable.getNextLevelTable();
         if(bodyNode != null)
             bodyNode.makeSymTab(level + 1);
         symbolTable = symbolTable.getPrevLevelTable();
+    }
+
+    public String makeASM(){
+        asm.addMainCommand(".L" + asmLabelNumber + ":\n");
+//        int beginWhileLabelNumber = asmLabelNumber;
+        whileBeginLabelNumberList.add(asmLabelNumber);
+        asmLabelNumber++;
+
+//        int endWhileLabelNumber = asmLabelNumber;
+        whileEndLabelNumberList.add(asmLabelNumber);
+        endLabelForBoolExpr = asmLabelNumber;
+        asmLabelNumber++;
+        String command = "";
+        if(conditionNode != null) {
+            if(conditionNode.getType().equals("Bool OR")){
+                beginLabelForBoolExpr = asmLabelNumber;
+                asmLabelNumber++;
+                command = conditionNode.makeASM();
+                asm.addMainCommand("\t" + command + "     .L" + whileEndLabelNumberList.getLast() + "\n");
+                asm.addMainCommand(".L" + beginLabelForBoolExpr + ":\n");
+            }else {
+                command = conditionNode.makeASM();
+                asm.addMainCommand("\t" + command + "     .L" + whileEndLabelNumberList.getLast() + "\n");
+            }
+        }
+
+//        typeForCheck = "def";
+
+//        symbolTable = symbolTable.addNextLevelTable();
+        symbolTable = symbolTable.getNextLevelTable();
+        if(bodyNode != null)
+            bodyNode.makeASM();
+        symbolTable = symbolTable.getPrevLevelTable();
+        asm.addMainCommand("\tjmp     .L" + whileBeginLabelNumberList.getLast() + "\n");
+        asm.addMainCommand(".L" + whileEndLabelNumberList.getLast() + ":\n");
+        whileBeginLabelNumberList.removeLast();
+        whileEndLabelNumberList.removeLast();
+//        asmLabelNumber++;
+        return "";
     }
 
     public void printNode(int level) {

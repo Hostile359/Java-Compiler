@@ -11,17 +11,19 @@ public class NumberNode extends Node {
         this.number = number;
         this.line = 0;
         this.pos = 0;
+        this.type = "Number";
     }
 
     public NumberNode(int number, int line, int pos) {
         this.number = number;
         this.line = line;
         this.pos = pos;
+        this.type = "Number";
     }
 
-    public String getNodeType(){
-        return "Number";
-    }
+//    public String getNodeType(){
+//        return "Number";
+//    }
 
     public int getNumber() {
         return number;
@@ -32,6 +34,10 @@ public class NumberNode extends Node {
             SymbolTable.setError();
             System.out.println("Error at <" + line + ":" + pos + ">" + ": '" + number + "' is int, but expected " + typeForCheck + ".");
         }
+    }
+
+    public String makeASM(){
+        return String.valueOf(number);
     }
 
     public void printNode(int level){

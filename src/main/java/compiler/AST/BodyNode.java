@@ -7,21 +7,29 @@ public class BodyNode extends Node {
 
     public BodyNode(List<Node> bodyNodes){
         this.bodyNodes = bodyNodes;
+        this.type = "Body";
     }
 
     public List<Node> getBodyNodes() {
         return bodyNodes;
     }
 
-    public String getNodeType(){
-        return "Body";
-    }
+//    public String getNodeType(){
+//        return "Body";
+//    }
 
     public void makeSymTab(int level){
         bodyNodes.forEach(node -> {
             if(node != null) node.makeSymTab(level);
             //initVarName = "0";
             });
+    }
+
+    public String makeASM(){
+        bodyNodes.forEach(node -> {
+            if(node != null) node.makeASM();
+        });
+        return "";
     }
 
     public void printNode(int level) {

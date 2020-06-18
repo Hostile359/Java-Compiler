@@ -5,18 +5,34 @@ public class Id {
     private String type;
     private int level;
     private boolean isInit;
+    private static int globalAsmOffset = 0;
+    private int asmOffset;
 
-    public Id(String name, String type, int level) {
-        this.name = name;
-        this.type = type;
-        this.level = level;
-    }
+//    public Id(String name, String type, int level) {
+//        this.name = name;
+//        this.type = type;
+//        this.level = level;
+//    }
 
     public Id(String name, String type, int level, boolean isInit) {
         this.name = name;
         this.type = type;
         this.level = level;
         this.isInit = isInit;
+        switch (type){
+            case "int":
+                globalAsmOffset += 4;
+                this.asmOffset = globalAsmOffset;
+                break;
+            case "String":
+                globalAsmOffset += 8;
+                this.asmOffset = globalAsmOffset;
+                break;
+            default:
+                this.asmOffset = 0;
+        }
+        //globalAsmOffset += this.asmOffset;
+
     }
 
     public String getName() {
@@ -25,6 +41,15 @@ public class Id {
 
     public String getType() {
         return type;
+    }
+
+    public int getAsmOffset() {
+        return asmOffset;
+    }
+
+    public void setAsmOffset(int asmOffset) {
+        globalAsmOffset += asmOffset;
+        this.asmOffset = globalAsmOffset;
     }
 
     public void setInit(boolean init) {
@@ -41,7 +66,7 @@ public class Id {
 
     public void print(){
         if(name != null || type != null) {
-            System.out.println("Id: " + name + " : " + type + ", level-" + level);
+            System.out.println("Id: " + name + " : " + type + ", level-" + level + ", offset: " + asmOffset);
         }
     }
 }

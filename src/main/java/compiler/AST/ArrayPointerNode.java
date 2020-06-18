@@ -19,6 +19,7 @@ public class ArrayPointerNode extends VariableNode{
 
     public ArrayPointerNode(Token token) {
         super(token);
+        this.type = "ArrayPointer";
     }
 
 
@@ -55,9 +56,14 @@ public class ArrayPointerNode extends VariableNode{
             System.out.println("Error at <" + token.getLine() + ":" + token.getPos()  + ">" + ": variable '" + token.getLexeme() + "' is already exist in this scope.");
     }
 
-    public String getNodeType(){
-        return "ArrayPointer";
+    public String makeASM(){
+//        symbolTable.getVariable(token.getLexeme()).getAsmOffset();
+        initVarName = token.getLexeme();
+        return "";
     }
+//    public String getNodeType(){
+//        return "ArrayPointer";
+//    }
 
     public void printNode(int level){
         printTabs(level);

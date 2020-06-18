@@ -39,4 +39,8 @@ public abstract class BinNode extends Node {
         if(right != null)
             right.makeSymTab(level);
     }
+
+    public String makeASM(){
+        return "";
+    }
 }

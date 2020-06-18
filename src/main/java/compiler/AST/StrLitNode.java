@@ -10,15 +10,16 @@ public class StrLitNode extends Node {
     public StrLitNode(String str, Token token) {
         this.str = str;
         this.token = token;
+        this.type = "StrLit";
     }
 
 //    public StrLitNode(String str){
 //        this.str = str;
 //    }
 
-    public String getNodeType(){
-        return "StrLit";
-    }
+//    public String getNodeType(){
+//        return "StrLit";
+//    }
 
     public String getStr() {
         return str;
@@ -28,6 +29,10 @@ public class StrLitNode extends Node {
             SymbolTable.setError();
             System.out.println("Error at <" + token.getLine() + ":" + token.getPos() + ">" + ": '" + token.getLexeme() + "' is String Literal, but expected " + typeForCheck + ".");
         }
+    }
+
+    public String makeASM(){
+        return str.replace("\"", "");
     }
 
     public void printNode(int level){

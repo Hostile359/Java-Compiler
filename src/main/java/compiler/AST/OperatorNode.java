@@ -5,13 +5,26 @@ public class OperatorNode extends Node {
 
     public OperatorNode(String name){
         this.name = name;
+        this.type = "Operator";
     }
 
-    public String getNodeType(){
-        return "Operator";
-    }
+//    public String getNodeType(){
+//        return "Operator";
+//    }
 
     public void makeSymTab(int level){
+    }
+
+    public String makeASM(){
+        switch (name){
+            case "break":
+                asm.addMainCommand("\tjmp     .L" + whileEndLabelNumberList.getLast() + "\n");
+                break;
+            case "continue":
+                asm.addMainCommand("\tjmp     .L" + whileBeginLabelNumberList.getLast() + "\n");
+                break;
+        }
+        return "";
     }
 
     public void printNode(int level){

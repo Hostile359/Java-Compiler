@@ -6,15 +6,17 @@ public class IfElseNode extends Node {
     private IfElseNode elseNode;
     private int nodeType;//0-if, 1- else if, 2-else
 
-    public IfElseNode(Node conditionNode, BodyNode bodyNode) {
-        this.conditionNode = conditionNode;
-        this.bodyNode = bodyNode;
-    }
+//    public IfElseNode(Node conditionNode, BodyNode bodyNode) {
+//        this.conditionNode = conditionNode;
+//        this.bodyNode = bodyNode;
+//        this.type = "IfElse";
+//    }
 
     public IfElseNode(Node conditionNode, BodyNode bodyNode, int nodeType) {
         this.conditionNode = conditionNode;
         this.bodyNode = bodyNode;
         this.nodeType = nodeType;
+        this.type = "IfElse";
     }
 
     public void setElseNode(IfElseNode elseNode) {
@@ -37,9 +39,9 @@ public class IfElseNode extends Node {
         return bodyNode;
     }
 
-    public String getNodeType(){
-        return "IfElse";
-    }
+//    public String getNodeType(){
+//        return "IfElse";
+//    }
 
     public void makeSymTab(int level){
         typeForCheck = "int";
@@ -47,14 +49,67 @@ public class IfElseNode extends Node {
             conditionNode.makeSymTab(level);
         typeForCheck = "def";
 
-        symbolTable.addNextLevelTable();
-        symbolTable = symbolTable.getNextLevelTable();
+        symbolTable = symbolTable.addNextLevelTable();
+//        symbolTable = symbolTable.getNextLevelTable();
         if(bodyNode != null)
             bodyNode.makeSymTab(level + 1);
         symbolTable = symbolTable.getPrevLevelTable();
 
         if(elseNode != null)
             elseNode.makeSymTab(level);
+    }
+
+    public String makeASM() {
+        if(nodeType == 0){
+            ifEndLabelNumberList.add(asmLabelNumber);
+            asmLabelNumber++;
+        }
+        int endBodyLabelNumber = asmLabelNumber;
+        asmLabelNumber++;
+        if(elseNode != null)
+            endLabelForBoolExpr = endBodyLabelNumber;
+        else
+            endLabelForBoolExpr = ifEndLabelNumberList.getLast();
+        String command = "";
+        if (conditionNode != null) {
+            if(conditionNode.getType().equals("Bool OR")){
+                beginLabelForBoolExpr = asmLabelNumber;
+                asmLabelNumber++;
+                command = conditionNode.makeASM();
+                asm.addMainCommand("\t" + command + "     .L" + endLabelForBoolExpr + "\n");
+                asm.addMainCommand(".L" + beginLabelForBoolExpr + ":\n");
+            }else {
+                command = conditionNode.makeASM();
+                asm.addMainCommand("\t" + command + "     .L" + endLabelForBoolExpr + "\n");
+            }
+//            command = conditionNode.makeASM();
+//            asm.addMainCommand("\t" + command + "     .L" + endLabelForBoolExpr + "\n");
+//            if(elseNode != null)
+//                asm.addMainCommand("\t" + command + "     .L" + endBodyLabelNumber + "\n");
+//            else
+//                asm.addMainCommand("\t" + command + "     .L" + ifEndLabelNumberList.getLast() + "\n");
+        }
+
+//        typeForCheck = "def";
+
+//        symbolTable = symbolTable.addNextLevelTable();
+        symbolTable = symbolTable.getNextLevelTable();
+        if (bodyNode != null)
+            bodyNode.makeASM();
+        symbolTable = symbolTable.getPrevLevelTable();
+
+        if (elseNode != null){
+            asm.addMainCommand("\tjmp     .L" + ifEndLabelNumberList.getLast() +"\n");
+            asm.addMainCommand(".L" + endBodyLabelNumber + ":\n");
+            elseNode.makeASM();
+        }else
+            asm.addMainCommand(".L" + ifEndLabelNumberList.getLast() + ":\n");
+        if(nodeType == 0)
+            ifEndLabelNumberList.removeLast();
+//        asm.addMainCommand("\tjmp     .L" + beginWhileLabelNumber + "\n");
+
+//        asmLabelNumber++;
+        return "";
     }
 
     public void printNode(int level) {

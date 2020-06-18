@@ -7,11 +7,12 @@ public class MethodNode extends Node {
     public MethodNode(String name){
         this.name = name;
         arg = null;
+        this.type = "Method";
     }
 
-    public String getNodeType(){
-        return "Method";
-    }
+//    public String getNodeType(){
+//        return "Method";
+//    }
 
     public String getName() {
         return name;
@@ -28,6 +29,10 @@ public class MethodNode extends Node {
     public void makeSymTab(int level){
         if(arg != null)
             arg.makeSymTab(level);
+    }
+
+    public String makeASM(){
+        return "";
     }
 
     public void printNode(int level){

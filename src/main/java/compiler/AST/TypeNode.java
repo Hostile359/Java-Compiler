@@ -1,20 +1,21 @@
 package compiler.AST;
 
 public class TypeNode extends Node {
-    private String type;
+    private String variableType;
     private VariableNode variable;
-    public TypeNode(String type, VariableNode variable){
-        this.type = type;
+    public TypeNode(String variableType, VariableNode variable){
+        this.variableType = variableType;
         this.variable = variable;
+        this.type = "Type";
     }
 
-    public String getNodeType(){
-        return "Type";
-    }
+//    public String getNodeType(){
+//        return "Type";
+//    }
 
-    public String getType() {
-        return type;
-    }
+//    public String getType() {
+//        return type;
+//    }
 
     public Node getVariable() {
         return variable;
@@ -22,12 +23,16 @@ public class TypeNode extends Node {
 
     public void makeSymTab(int level) {
         if(variable != null)
-            variable.makeSymTab(level, type);
+            variable.makeSymTab(level, variableType);
+    }
+
+    public String makeASM(){
+        return variable.makeASM();
     }
 
     public void printNode(int level){
         printTabs(level);
-        System.out.println("[TYPE] " + type);
+        System.out.println("[TYPE] " + variableType);
         if(variable != null)
             variable.printNode(level  + 1);
     }

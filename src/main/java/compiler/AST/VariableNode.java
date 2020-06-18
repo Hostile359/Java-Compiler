@@ -23,11 +23,13 @@ public class VariableNode extends Node {
     public VariableNode(Token token) {
         this.token = token;
         method = null;
+        this.type = "Variable";
     }
 
     public VariableNode(Token token, MethodNode method) {
         this.token = token;
         this.method = method;
+        this.type = "Variable";
     }
 
     public void setMethod(MethodNode method) {
@@ -89,13 +91,32 @@ public class VariableNode extends Node {
             System.out.println("Error at <" + token.getLine() + ":" + token.getPos()  + ">" + ": variable '" + token.getLexeme() + "' is already exist in this scope.");
     }
 
-    public void makeSymTab(String type, int level){
+//    public void makeSymTab(String type, int level){
+//
+//    }
 
+    public String makeASM(){
+        if(method == null){
+            Id id = symbolTable.getVariable(token.getLexeme());
+            String offset = String.valueOf(id.getAsmOffset());
+            String type = id.getType();
+            String addres = "";
+            switch (type){
+                case "int":
+                    addres = "DWORD PTR [rbp-" + offset + "]";
+                    break;
+                case "String":
+                    addres = "QWORD PTR [rbp-" + offset + "]";
+                    break;
+            }
+            return addres;
+        }
+        return "";
     }
 
-    public String getNodeType(){
-        return "Variable";
-    }
+//    public String getNodeType(){
+//        return "Variable";
+//    }
 
     public void printNode(int level){
         printTabs(level);
