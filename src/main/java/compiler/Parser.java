@@ -13,14 +13,15 @@ public class Parser {
     private int error;//0-не было встречено ошибок, 1 были
     private HashMap<String, Integer> ArithOpPriority;
     private HashMap<String, Integer> BoolOpPriority;
-    private boolean isWhileBody;
-
+//    private boolean isWhileBody;
+    private LinkedList<Integer> whileBody;
     Parser(List<Token> tokens){
         this.tokens = tokens;
         this.root = null;
         this.currentTokenIndex = -1;
         this.error = 0;
-        this.isWhileBody = false;
+//        this.isWhileBody = false;
+        this.whileBody = new LinkedList<>();
         ArithOpPriority = new HashMap<String, Integer>();
         ArithOpPriority.put("*", 1);
         ArithOpPriority.put("/", 1);
@@ -184,7 +185,8 @@ public class Parser {
                     break;
                 case "break":
                 case "continue":
-                    if(isWhileBody) {
+//                    if(isWhileBody) {
+                    if(!whileBody.isEmpty()){
                         body.add(new OperatorNode(currentToken.getLexeme()));
                         this.getNextToken();
                         if (!tokens.get(currentTokenIndex).getType().equals("Semi")) {
@@ -195,9 +197,11 @@ public class Parser {
                     this.skipToken("Semi", null);
                     break;
                 case "while":
-                    isWhileBody = true;
+//                    isWhileBody = true;
+                    whileBody.add(1);
                     body.add(this.parseWhile());
-                    isWhileBody = false;
+//                    isWhileBody = false;
+                    whileBody.pop();
                     break;
                 case "if":
                     body.add(this.parseIf());
@@ -395,14 +399,19 @@ public class Parser {
             List<Node> arrayMembers = new LinkedList<>();
             while (true) {
                 Node memberNode = this.parseExpression();
-                if (memberNode != null)
+                if (memberNode != null) {
                     arrayMembers.add(memberNode);
-                if (tokens.get(currentTokenIndex).getType().equals("R_brace")) {
-                    this.getNextToken();
-                    return new AssignNode(node, new ArrayNode(arrayMembers));
+                    if (tokens.get(currentTokenIndex).getType().equals("R_brace")) {
+                        this.getNextToken();
+                        return new AssignNode(node, new ArrayNode(arrayMembers));
 //                    break;
-                } else if (!tokens.get(currentTokenIndex).getType().equals("Col")) {
-                    this.printError(tokens.get(currentTokenIndex), ",");
+                    }else if (!tokens.get(currentTokenIndex).getType().equals("Col")) {
+                        this.printError(tokens.get(currentTokenIndex), ",");
+                        this.skipToken("R_brace", "L_brace");
+                        break;
+                    }
+                } else {
+                    this.printError(tokens.get(currentTokenIndex), "Number/Variable");
                     this.skipToken("R_brace", "L_brace");
                     break;
                 }
