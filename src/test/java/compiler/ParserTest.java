@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,6 +102,10 @@ public class ParserTest {
         }catch(IOException ex){
             System.out.println(ex.getMessage());
         }
+        System.setOut(new PrintStream(new OutputStream() {
+            @Override
+            public void write(int b) {}
+        }));
 
         Parser parser = new Parser(tokens);
         Node AST = parser.parse();

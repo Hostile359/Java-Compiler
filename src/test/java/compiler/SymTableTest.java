@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,7 +123,10 @@ public class SymTableTest {
         Node AST = parser.parse();
 
         assert AST != null;
-
+        System.setOut(new PrintStream(new OutputStream() {
+            @Override
+            public void write(int b) {}
+        }));
         AST.makeSymTab(0);
 
         assertEquals(1, AST.symbolTableCheckError());
