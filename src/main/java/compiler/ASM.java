@@ -6,15 +6,9 @@ import java.util.Map;
 public class ASM {
     private String asm;
     private StringBuilder main;
-//    private StringBuilder stringLabels;
     private HashMap<String, String> stringLabels;
     public ASM(){
         main = new StringBuilder();
-        main.append("main:\n");
-        main.append("\tpush    rbp\n" +
-                "\tmov     rbp, rsp\n" +
-                "\tsub     rsp, 48\n");
-//        stringLabels = new StringBuilder();
         stringLabels = new HashMap<>();
     }
 
@@ -45,7 +39,7 @@ public class ASM {
         main.append(command);
     }
 
-    public String buildASM(){
+    public String buildASM(String maxOffset){
         main.append("\tnop\n" +
                 "\tleave\n" +
                 "\tret");
@@ -55,14 +49,8 @@ public class ASM {
             temp.append(label.getKey()).append("\n");
             temp.append("\t").append(label.getValue()).append("\n");
         }
+        temp.append("main:\n" + "\tpush    rbp\n" + "\tmov     rbp, rsp\n" + "\tsub     rsp, ").append(maxOffset).append("\n");
         return temp.toString() + main.toString();
     }
-
-//    public void print(){
-//        System.out.print(asm);
-////        System.out.print(main.toString());
-//    }
-
-
 
 }

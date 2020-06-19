@@ -10,18 +10,6 @@ public class WhileNode extends Node {
         this.type = "While";
     }
 
-    public Node getConditionNode() {
-        return conditionNode;
-    }
-
-    public BodyNode getBodyNode() {
-        return bodyNode;
-    }
-
-//    public String getNodeType(){
-//        return "While";
-//    }
-
     public void makeSymTab(int level) {
         typeForCheck = "int";
         if(conditionNode != null)
@@ -37,11 +25,9 @@ public class WhileNode extends Node {
 
     public String makeASM(){
         asm.addMainCommand(".L" + asmLabelNumber + ":\n");
-//        int beginWhileLabelNumber = asmLabelNumber;
         whileBeginLabelNumberList.add(asmLabelNumber);
         asmLabelNumber++;
 
-//        int endWhileLabelNumber = asmLabelNumber;
         whileEndLabelNumberList.add(asmLabelNumber);
         endLabelForBoolExpr = asmLabelNumber;
         asmLabelNumber++;
@@ -59,9 +45,6 @@ public class WhileNode extends Node {
             }
         }
 
-//        typeForCheck = "def";
-
-//        symbolTable = symbolTable.addNextLevelTable();
         symbolTable = symbolTable.getNextLevelTable();
         if(bodyNode != null)
             bodyNode.makeASM();
@@ -70,7 +53,6 @@ public class WhileNode extends Node {
         asm.addMainCommand(".L" + whileEndLabelNumberList.getLast() + ":\n");
         whileBeginLabelNumberList.removeLast();
         whileEndLabelNumberList.removeLast();
-//        asmLabelNumber++;
         return "";
     }
 

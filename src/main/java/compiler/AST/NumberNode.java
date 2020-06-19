@@ -21,10 +21,6 @@ public class NumberNode extends Node {
         this.type = "Number";
     }
 
-//    public String getNodeType(){
-//        return "Number";
-//    }
-
     public int getNumber() {
         return number;
     }

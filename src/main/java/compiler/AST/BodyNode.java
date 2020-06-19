@@ -14,14 +14,10 @@ public class BodyNode extends Node {
         return bodyNodes;
     }
 
-//    public String getNodeType(){
-//        return "Body";
-//    }
 
     public void makeSymTab(int level){
         bodyNodes.forEach(node -> {
             if(node != null) node.makeSymTab(level);
-            //initVarName = "0";
             });
     }
 

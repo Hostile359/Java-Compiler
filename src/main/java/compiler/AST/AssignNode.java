@@ -1,8 +1,6 @@
 package compiler.AST;
 
 public class AssignNode extends BinNode{
-//    private Node right;
-//    private Node left;
 
     public AssignNode(Node left, Node right){
         this.left = left;
@@ -10,17 +8,11 @@ public class AssignNode extends BinNode{
         this.type = "Assign";
     }
 
-//    public String getNodeType(){
-//        return "Assign";
-//    }
-
     public void makeSymTab(int level) {
         isInit = true;
-        //initVarName = "1";
         if(left != null)
            left.makeSymTab(level);
         isInit = false;
-//        System.out.println("AAAAAAA!!! - " + typeForCheck);
         if(!typeForCheck.equals("def")) {
             if (right != null)
                 right.makeSymTab(level);
@@ -31,7 +23,6 @@ public class AssignNode extends BinNode{
     }
 
     public String makeASM(){
-//        System.out.println("ASSSSSSSSSSSSSSSSS");
         String leftOperand = left.makeASM();
         String leftOperandIndex = "0";
         if(!asmIndex.equals("0"))
@@ -46,56 +37,23 @@ public class AssignNode extends BinNode{
         if(leftOperand.contains("DWORD")){
             switch (right.getType()) {
                 case "Number":
-//                command = "\tmov     " + leftOperand + ", " + rightOperand + "\n";
-//                System.out.println(command);
-                    if(leftOperand.contains("rax")){
-//                        if(!leftOperandIndex.equals("0"))
-                            asm.addMainCommand(leftOperandIndex);
-                        asm.addMainCommand("\tmov     edx, " + rightOperand + "\n");
-                        asm.addMainCommand("\tmov     " + leftOperand + ", edx\n");
-                    }else
-                        asm.addMainCommand("\tmov     " + leftOperand + ", " + rightOperand + "\n");
-                    break;
                 case "Variable":
-                    if(leftOperand.contains("rax")){
-//                        if(!leftOperandIndex.equals("0"))
-                            asm.addMainCommand(leftOperandIndex);
-                        asm.addMainCommand("\tmov     edx, " + rightOperand + "\n");
-                        asm.addMainCommand("\tmov     " + leftOperand + ", edx\n");
-                    }else {
-                        asm.addMainCommand("\tmov     eax, " + rightOperand + "\n");
-                        asm.addMainCommand("\tmov     " + leftOperand + ", eax\n");
-                    }
-                    break;
                 case "Arith":
-                    if(leftOperand.contains("rax")){
-//                        if(!leftOperandIndex.equals("0"))
-                        asm.addMainCommand("\tmov     edx, " + rightOperand + "\n");
-                            asm.addMainCommand(leftOperandIndex);
-                        asm.addMainCommand("\tmov     " + leftOperand + ", edx\n");
-                    }else
-                        asm.addMainCommand("\tmov     " + leftOperand + ", " + rightOperand + "\n");
-                    break;
                 case "ArrayMember":
-                    if(leftOperand.contains("rax")){
-                        if(!rightOperandIndex.equals("0"))
-                            asm.addMainCommand(rightOperandIndex);
-                        asm.addMainCommand("\tmov     edx, " + rightOperand + "\n");
-//                        if(!leftOperandIndex.equals("0"))
-                            asm.addMainCommand(leftOperandIndex);
-                        asm.addMainCommand("\tmov     " + leftOperand + ", edx\n");
-                    }else {
-                        if(!rightOperandIndex.equals("0"))
-                            asm.addMainCommand(rightOperandIndex);
-                        asm.addMainCommand("\tmov     eax, " + rightOperand + "\n");
-                        asm.addMainCommand("\tmov     " + leftOperand + ", eax\n");
-                    }
+                    if(!rightOperandIndex.equals("0"))
+                        asm.addMainCommand(rightOperandIndex);
+
+                    asm.addMainCommand("\tmov     ebx, " + rightOperand + "\n");
+
+                    if(!leftOperandIndex.equals("0"))
+                        asm.addMainCommand(leftOperandIndex);
+                    asm.addMainCommand("\tmov     " + leftOperand + ", ebx\n");
                     break;
+
                 case "CallFunc":
                     asm.addStringLabel(0, "", "");
                     String label = ".NUM";
                     String leftOperandAddress = leftOperand.substring(10);
-//                    System.out.println(leftOperandAddress);
                     if(leftOperand.contains("rax")) {
                         asm.addMainCommand(leftOperandIndex);
                         asm.addMainCommand("\tlea     rbx, " + leftOperandAddress + "\n");
@@ -103,7 +61,6 @@ public class AssignNode extends BinNode{
                         asm.addMainCommand("\tmov     edi, OFFSET FLAT:" + label + "\n");
                         asm.addMainCommand("\tmov     eax, 0\n");
                         asm.addMainCommand("\tcall    __isoc99_scanf\n");
-//                        System.out.println(leftOperandAddress);
                     }else {
 
                         asm.addMainCommand("\tlea     rax, " + leftOperandAddress + "\n");
@@ -118,13 +75,11 @@ public class AssignNode extends BinNode{
             String label;
             switch (right.getType()) {
                 case "Variable":
-//                command = "\tmov     eax, " + rightOperand + "\n";
                     asm.addMainCommand("\tmov     rax, " + rightOperand + "\n");
-//                command = "\tmov     " + leftOperand + ", eax\n";
                     asm.addMainCommand("\tmov     " + leftOperand + ", rax\n");
                     break;
                 case "StrLit":
-                    label = ".LC" + String.valueOf(asmStringsInc);
+                    label = ".LC" + asmStringsInc;
                     asmStringsInc++;
                     asm.addStringLabel(4, label, rightOperand);
                     asm.addMainCommand("\tmov     " + leftOperand + ", OFFSET FLAT:" + label + "\n");
@@ -140,9 +95,6 @@ public class AssignNode extends BinNode{
 //                    break;
             }
         }
-//        else if(leftOperand.equals("Array")){
-//
-//        }
         return "";
     }
 

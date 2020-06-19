@@ -10,18 +10,6 @@ public class FuncNode extends Node {
         this.type = "Func";
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public BodyNode getBodyNode() {
-        return bodyNode;
-    }
-
-//    public String getNodeType(){
-//        return "Func";
-//    }
-
     public void makeSymTab(int level){
         if(bodyNode != null)
             bodyNode.makeSymTab(level);
@@ -30,7 +18,7 @@ public class FuncNode extends Node {
     public String makeASM(){
         if(bodyNode != null)
             bodyNode.makeASM();
-        return asm.buildASM();
+        return asm.buildASM(symbolTable.getAsmOffset());
     }
 
     public void printNode(int level) {

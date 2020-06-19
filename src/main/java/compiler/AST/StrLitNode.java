@@ -13,14 +13,6 @@ public class StrLitNode extends Node {
         this.type = "StrLit";
     }
 
-//    public StrLitNode(String str){
-//        this.str = str;
-//    }
-
-//    public String getNodeType(){
-//        return "StrLit";
-//    }
-
     public String getStr() {
         return str;
     }

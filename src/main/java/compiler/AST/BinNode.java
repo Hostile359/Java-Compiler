@@ -13,18 +13,6 @@ public abstract class BinNode extends Node {
         return right;
     }
 
-    //    public BinNode(String op){
-//        this.op = op;
-//        right = null;
-//        left = null;
-//    }
-//
-//    public BinNode(String op, Node left, Node right) {
-//        this.op = op;
-//        this.left = left;
-//        this.right = right;
-//    }
-
     public void setLeft(Node node){
         this.left = node;
     }

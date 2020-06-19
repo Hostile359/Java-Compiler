@@ -6,12 +6,6 @@ public class IfElseNode extends Node {
     private IfElseNode elseNode;
     private int nodeType;//0-if, 1- else if, 2-else
 
-//    public IfElseNode(Node conditionNode, BodyNode bodyNode) {
-//        this.conditionNode = conditionNode;
-//        this.bodyNode = bodyNode;
-//        this.type = "IfElse";
-//    }
-
     public IfElseNode(Node conditionNode, BodyNode bodyNode, int nodeType) {
         this.conditionNode = conditionNode;
         this.bodyNode = bodyNode;
@@ -39,9 +33,6 @@ public class IfElseNode extends Node {
         return bodyNode;
     }
 
-//    public String getNodeType(){
-//        return "IfElse";
-//    }
 
     public void makeSymTab(int level){
         typeForCheck = "int";
@@ -50,7 +41,6 @@ public class IfElseNode extends Node {
         typeForCheck = "def";
 
         symbolTable = symbolTable.addNextLevelTable();
-//        symbolTable = symbolTable.getNextLevelTable();
         if(bodyNode != null)
             bodyNode.makeSymTab(level + 1);
         symbolTable = symbolTable.getPrevLevelTable();
@@ -82,17 +72,8 @@ public class IfElseNode extends Node {
                 command = conditionNode.makeASM();
                 asm.addMainCommand("\t" + command + "     .L" + endLabelForBoolExpr + "\n");
             }
-//            command = conditionNode.makeASM();
-//            asm.addMainCommand("\t" + command + "     .L" + endLabelForBoolExpr + "\n");
-//            if(elseNode != null)
-//                asm.addMainCommand("\t" + command + "     .L" + endBodyLabelNumber + "\n");
-//            else
-//                asm.addMainCommand("\t" + command + "     .L" + ifEndLabelNumberList.getLast() + "\n");
         }
 
-//        typeForCheck = "def";
-
-//        symbolTable = symbolTable.addNextLevelTable();
         symbolTable = symbolTable.getNextLevelTable();
         if (bodyNode != null)
             bodyNode.makeASM();
@@ -106,9 +87,6 @@ public class IfElseNode extends Node {
             asm.addMainCommand(".L" + ifEndLabelNumberList.getLast() + ":\n");
         if(nodeType == 0)
             ifEndLabelNumberList.removeLast();
-//        asm.addMainCommand("\tjmp     .L" + beginWhileLabelNumber + "\n");
-
-//        asmLabelNumber++;
         return "";
     }
 

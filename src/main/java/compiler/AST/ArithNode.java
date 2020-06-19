@@ -1,10 +1,7 @@
 package compiler.AST;
 
 public class ArithNode extends BinNode {
-//    private String op;
-//    private Node left;
-//    private Node right;
-//
+
     public ArithNode(String op){
         this.op = op;
         right = null;
@@ -18,18 +15,6 @@ public class ArithNode extends BinNode {
         this.right = right;
         this.type = "Arith";
     }
-
-//
-//    public void setLeft(Node node){
-//        this.left = node;
-//    }
-//
-//    public void setRight(Node node){
-//        this.right = node;
-//    }
-//    public String getNodeType(){
-//        return "Arith";
-//    }
 
     public String makeASM(){
         String leftOperand = left.makeASM();
@@ -63,70 +48,52 @@ public class ArithNode extends BinNode {
 
         switch (op){
             case "+":
-                if(leftOperand.contains("rax"))
+                if(!leftOperandIndex.equals("0"))
                     asm.addMainCommand(leftOperandIndex);
                 asm.addMainCommand("\tmov     edx, " + leftOperand + "\n");
-                if(rightOperand.contains("rax"))
+                if(!rightOperandIndex.equals("0"))
                     asm.addMainCommand(rightOperandIndex);
                 asm.addMainCommand("\tmov     eax, " + rightOperand + "\n");
                 asm.addMainCommand("\tadd     eax, edx\n");
-//                asm.addMainCommand("\tmov     eax, " + leftOperand + "\n");
-//                asm.addMainCommand("\tadd     eax, " + rightOperand + "\n");
                 return "eax";
             case "-":
-                if(leftOperand.contains("rax"))
+                if(!leftOperandIndex.equals("0"))
                     asm.addMainCommand(leftOperandIndex);
                 asm.addMainCommand("\tmov     edx, " + leftOperand + "\n");
-                if(rightOperand.contains("rax"))
+                if(!rightOperandIndex.equals("0"))
                     asm.addMainCommand(rightOperandIndex);
                 asm.addMainCommand("\tmov     ecx, " + rightOperand + "\n");
                 asm.addMainCommand("\tmov     eax, edx\n");
                 asm.addMainCommand("\tsub     eax, ecx\n");
-//                asm.addMainCommand("\tmov     eax, " + leftOperand + "\n");
-//                asm.addMainCommand("\tsub     eax, " + rightOperand + "\n");
                 return "eax";
             case "*":
-//                if(rightOperand.matches("\\d+")){
-//                    String temp = leftOperand;
-//                    leftOperand = rightOperand;
-//                    rightOperand = temp;
-//                }
-//                asm.addMainCommand("\tmov     eax, " + leftOperand + "\n");
-////                asm.addMainCommand("\timul    eax, " + rightOperand + "\n");
-//                asm.addMainCommand("\timul    " + rightOperand + "\n");
-
-                if(leftOperand.contains("rax"))
+                if(!leftOperandIndex.equals("0"))
                     asm.addMainCommand(leftOperandIndex);
                 asm.addMainCommand("\tmov     edx, " + leftOperand + "\n");
-                if(rightOperand.contains("rax"))
+                if(!rightOperandIndex.equals("0"))
                     asm.addMainCommand(rightOperandIndex);
                 asm.addMainCommand("\tmov     eax, " + rightOperand + "\n");
                 asm.addMainCommand("\timul     eax, edx\n");
                 return "eax";
             case "/":
-                if(leftOperand.contains("rax"))
+                if(!leftOperandIndex.equals("0"))
                     asm.addMainCommand(leftOperandIndex);
                 asm.addMainCommand("\tmov     edx, " + leftOperand + "\n");
-                if(rightOperand.contains("rax"))
+                if(!rightOperandIndex.equals("0"))
                     asm.addMainCommand(rightOperandIndex);
                 asm.addMainCommand("\tmov     ebx, " + rightOperand + "\n");
                 asm.addMainCommand("\tmov     eax, edx\n");
-
-//                asm.addMainCommand("\tmov     eax, " + leftOperand + "\n");
-//                asm.addMainCommand("\tmov     ebx, " + rightOperand + "\n");
                 asm.addMainCommand("\tcdq\n");
                 asm.addMainCommand("\tidiv    ebx\n");
                 return "eax";
             case "%":
-                if(leftOperand.contains("rax"))
+                if(!leftOperandIndex.equals("0"))
                     asm.addMainCommand(leftOperandIndex);
                 asm.addMainCommand("\tmov     edx, " + leftOperand + "\n");
-                if(rightOperand.contains("rax"))
+                if(!rightOperandIndex.equals("0"))
                     asm.addMainCommand(rightOperandIndex);
                 asm.addMainCommand("\tmov     ebx, " + rightOperand + "\n");
                 asm.addMainCommand("\tmov     eax, edx\n");
-//                asm.addMainCommand("\tmov     eax, " + leftOperand + "\n");
-//                asm.addMainCommand("\tmov     ebx, " + rightOperand + "\n");
                 asm.addMainCommand("\tcdq\n");
                 asm.addMainCommand("\tidiv    ebx\n");
                 return "edx";

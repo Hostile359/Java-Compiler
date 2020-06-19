@@ -18,30 +18,6 @@ public class BoolNode extends BinNode {
         }
     }
 
-//    public BoolNode(String op, Node left, Node right) {
-//        this.op = op;
-//        this.left = left;
-//        this.right = right;
-//        switch (op){
-//            case "&&":
-//                this.type = "Bool AND";
-//                break;
-//            case "||":
-//                this.type = "Bool OR";
-//                break;
-//        }
-//    }
-
-//    public String getNodeType(){
-//        return "Bool";
-//    }
-
-//    public void makeSymTab(int level){
-//        if(left != null)
-//            left.makeSymTab(level);
-//        if(right != null)
-//            right.makeSymTab(level);
-//    }
     public String getReverseJmp(String command){
         String reverseCommand = "";
         switch (command){
@@ -68,10 +44,6 @@ public class BoolNode extends BinNode {
     }
 
     public String makeASM() {
-//        System.out.println("!!!!!!!!!" + orLabelsList.size());
-//        orLabelsList.forEach(System.out::println);
-//        String command = left.makeASM();
-
         switch (op){
             case "&&":
                 String command = left.makeASM();
@@ -81,18 +53,13 @@ public class BoolNode extends BinNode {
                     asm.addMainCommand("\t" + command + "     .L" + orLabelsList.getLast() + "\n");
                 command = right.makeASM();
                 return command;
-//                asm.addMainCommand("\t" + command + "     .L" + metka + "\n");
             case "||":
                 orLabelsList.add(asmLabelNumber);
                 asmLabelNumber++;
                 command = getReverseJmp(left.makeASM());
                 asm.addMainCommand("\t" + command + "     .L" + beginLabelForBoolExpr + "\n");
                 asm.addMainCommand(".L" + orLabelsList.getLast() + ":\n");
-//                System.out.println("AAAAA - " + orLabelsList.getLast());
-//                orLabelsList.pop();
                 orLabelsList.removeLast();
-//                System.out.println("BBBB - " + orLabelsList.getLast());
-//                command = getReverseJmp(right.makeASM());
                 command = right.makeASM();
 
                 return command;

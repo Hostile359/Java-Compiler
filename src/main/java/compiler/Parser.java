@@ -13,14 +13,12 @@ public class Parser {
     private int error;//0-не было встречено ошибок, 1 были
     private HashMap<String, Integer> ArithOpPriority;
     private HashMap<String, Integer> BoolOpPriority;
-//    private boolean isWhileBody;
     private LinkedList<Integer> whileBody;
     Parser(List<Token> tokens){
         this.tokens = tokens;
         this.root = null;
         this.currentTokenIndex = -1;
         this.error = 0;
-//        this.isWhileBody = false;
         this.whileBody = new LinkedList<>();
         ArithOpPriority = new HashMap<String, Integer>();
         ArithOpPriority.put("*", 1);
@@ -31,45 +29,27 @@ public class Parser {
         BoolOpPriority = new HashMap<String, Integer>();
         BoolOpPriority.put("&&", 1);
         BoolOpPriority.put("||", 2);
-//        ArithOpPriority.put("<", 3);
-//        ArithOpPriority.put("<=", 3);
-//        ArithOpPriority.put(">", 3);
-//        ArithOpPriority.put(">=", 3);
-//        ArithOpPriority.put("&&", 4);
-//        ArithOpPriority.put("||", 5);
-
     }
 
     public void getNextToken(){
         currentTokenIndex++;
-//        if(tokens.get(currentTokenIndex).getType().equals("EOF")){
-//            Token token  = tokens.get(currentTokenIndex);
-//            System.out.println("Unexpected end of file at <" + token.getLine() + ":" + token.getPos()  + ">");
-//            System.exit(0);
-//        }else
         if(currentTokenIndex >= tokens.size()) {
             Token token  = tokens.get(tokens.size() - 1);
             System.out.println("Unexpected end of tokens at <" + token.getLine() + ":" + token.getPos()  + ">");
             System.exit(0);
         }
-//        if(currentTokenIndex < tokens.size())
-//            return tokens.get(currentTokenIndex);
-//
-//        return null;
     }
 
     public void skipToken(String expectedType, String reverseType){
         int tokenCounter = 1;
-        while (tokenCounter > 0) {//!tokens.get(currentTokenIndex).getType().equals(expectedType))
+        while (tokenCounter > 0) {
             String currentTokenType = tokens.get(currentTokenIndex).getType();
             if(currentTokenType.equals(expectedType))
                 tokenCounter--;
             else if(currentTokenType.equals(reverseType))
                 tokenCounter++;
-            //System.out.println("TokenCounter " + tokenCounter);
             this.getNextToken();
         }
-        //this.getNextToken();
     }
 
     public void printAST(){
@@ -97,7 +77,6 @@ public class Parser {
                 else
                     this.printError(tokens.get(currentTokenIndex), "()");
                 root = new FuncNode("main", this.parseBody());
-//                this.getNextToken();
                 if(!tokens.get(currentTokenIndex).getType().equals("EOF"))
                     this.printError(tokens.get(currentTokenIndex), "EOF");
             }
@@ -109,21 +88,6 @@ public class Parser {
             root = null;
 
         return root;
-        //root = new BodyNode(this.parseBody());//this.parseWhile();//parseBoolExpression();
-       // this.getNextToken();
-
-//        Token currentToken = tokens.get(currentTokenIndex);
-////        String currentTokenType = tokens.get(currentTokenIndex).getType();
-//        if(currentToken.getType().equals("int") || currentToken.getType().equals("String"))
-//            root = this.parseVarInit(currentToken.getType());
-//        else if(currentToken.getType().equals("Identifier")) {
-//            root = this.parseVarAssign(currentToken);
-//        }
-//        System.out.println(1234);
-
-
-//        List<Node> nodes = this.parseBody();
-//        nodes.forEach(n->n.printNode(0));
     }
 
     public BodyNode parseBody(){
@@ -148,13 +112,6 @@ public class Parser {
                         this.getNextToken();
                         if (tokens.get(currentTokenIndex).getType().equals("L_paren")) {
                             Node arg = this.parseOperand();
-//                        if(arg == null && tokens.get(currentTokenIndex).getType().equals("Str_lit")){
-//                            arg = new StrLitNode(tokens.get(currentTokenIndex).getLexeme());
-//                            this.getNextToken();
-//                        }else if(arg == null) {
-//                            this.printError(tokens.get(currentTokenIndex), "Variable/Number/StringLiteral");
-//                            this.getNextToken();
-//                        }
                             if (arg == null) {
                                 if (tokens.get(currentTokenIndex).getType().equals("Str_lit"))
                                     arg = new StrLitNode(tokens.get(currentTokenIndex).getLexeme(), currentToken);
@@ -185,7 +142,6 @@ public class Parser {
                     break;
                 case "break":
                 case "continue":
-//                    if(isWhileBody) {
                     if(!whileBody.isEmpty()){
                         body.add(new OperatorNode(currentToken.getLexeme()));
                         this.getNextToken();
@@ -197,10 +153,8 @@ public class Parser {
                     this.skipToken("Semi", null);
                     break;
                 case "while":
-//                    isWhileBody = true;
                     whileBody.add(1);
                     body.add(this.parseWhile());
-//                    isWhileBody = false;
                     whileBody.pop();
                     break;
                 case "if":
@@ -209,11 +163,9 @@ public class Parser {
                 case "EOF":
                     this.printError(tokens.get(currentTokenIndex), "}");
                     return new BodyNode(body);
-//                    break;
                 default:
                     this.printError(currentToken, "Body expression");
                     this.skipToken("Semi", null);
-//                    this.getNextToken();
                     break;
             }
         }
@@ -252,16 +204,14 @@ public class Parser {
         }
         Node operand = this.parseComparison();
         if(operand == null){
-            //System.out.println("NULL");
             this.printError(tokens.get(currentTokenIndex), "Variable/Number/ArithExpression");
             this.skipToken("R_paren", "L_paren");
             return null;
-        }//else if(tokens.get(currentTokenIndex).getType().equals("OR") || tokens.get(currentTokenIndex).getType().equals("AND")
+        }
         Integer priority = this.getBoolOpPriority();
         if(priority != null)
             operand = this.parseBool(priority, operand);
         if(!tokens.get(currentTokenIndex).getType().equals("R_paren")){
-//            System.out.println("TUT");
             this.printError(tokens.get(currentTokenIndex), ")");
 
         }
@@ -270,19 +220,16 @@ public class Parser {
     }
 
     public Integer getBoolOpPriority(){
-        //this.getNextToken();
         return BoolOpPriority.get(tokens.get(currentTokenIndex).getLexeme());
     }
 
     public BoolNode parseBool(Integer priority, Node left){
 
         BoolNode node = new BoolNode(tokens.get(currentTokenIndex).getLexeme());
-//        tokens.get(currentTokenIndex).print();
         Node right = this.parseComparison();
         if(right == null)
             this.printError(tokens.get(currentTokenIndex), "CompareExpresion");
-//            return null;//ошибка
-//        }
+
         Integer nextOpPriority = this.getBoolOpPriority();
         if(nextOpPriority == null){
             node.setLeft(left);
@@ -310,13 +257,11 @@ public class Parser {
                 case "OP_LESS":
                 case "OP_NOTEQ":
                 case "OP_EQ":
-//                    left.printNode(0);
                     Node right = this.parseExpression();
                     if (right == null) {
                         this.printError(tokens.get(currentTokenIndex), "Variable/Number/ArithExpression");
                         return null;
                     }
-//                    right.printNode(0);
                     return new CompareNode(currentToken.getLexeme(), left, right);
 
                 default:
@@ -324,12 +269,10 @@ public class Parser {
                     return null;
             }
         }
-//        this.printError(tokens.get(currentTokenIndex), "Variable/Number/ArithExpression");
-//        this.skipToken("R_paren");
         return null;
     }
 
-    public Node parseVarInit(String type){ //массивы
+    public Node parseVarInit(String type){
         this.getNextToken();
         Token currentToken = tokens.get(currentTokenIndex);
         if(currentToken.getType().equals("Identifier")){
@@ -338,18 +281,6 @@ public class Parser {
 
             if(tokens.get(currentTokenIndex).getType().equals("Assign")) {
                 node = this.parseAssign(node);
-//                Node exprNode = this.parseExpression();
-//                //node = new AssignNode(node, this.parseExpression());
-//                if(exprNode != null)
-//                    node = new AssignNode(node, exprNode);
-//                else if(tokens.get(currentTokenIndex - 1).getType().equals("OP_SUB")) {
-//                    this.printError(tokens.get(currentTokenIndex), "Variable/Number/ArithExpression");
-//                    this.getNextToken();
-//                }else if(tokens.get(currentTokenIndex).getType().equals("Str_lit")) {
-//                    node = new AssignNode(node, new StrLitNode(tokens.get(currentTokenIndex).getLexeme()));
-//                    this.getNextToken();
-//                }else
-//                    printError(tokens.get(currentTokenIndex), "Variable/Number/ArithExpression/StringLiteral");
             }
             if(!tokens.get(currentTokenIndex).getType().equals("Semi")) {
                 printError(tokens.get(currentTokenIndex), ";");
@@ -362,12 +293,10 @@ public class Parser {
                 this.getNextToken();
                 currentToken = tokens.get(currentTokenIndex);
                 if(currentToken.getType().equals("Identifier")){
-//                    Node node = new VariableNode(currentToken);
                     Node node =new TypeNode(type, new ArrayPointerNode(currentToken));
                     this.getNextToken();
                     currentToken = tokens.get(currentTokenIndex);
                     if(currentToken.getType().equals("Assign")){
-//                       node = this.parseAssign(node);
                         node = this.parseArrayInit(node);
                         if(!tokens.get(currentTokenIndex).getType().equals("Semi")) {
                             printError(tokens.get(currentTokenIndex), ";");
@@ -375,9 +304,6 @@ public class Parser {
                     }else{
                         printError(tokens.get(currentTokenIndex), "=");
                     }
-//                    if(!tokens.get(currentTokenIndex).getType().equals("Semi")) {
-//                        printError(tokens.get(currentTokenIndex), ";");
-//                    }
                     this.skipToken("Semi", null);
                     return node;
 
@@ -395,7 +321,6 @@ public class Parser {
     public Node parseArrayInit(Node node){
         this.getNextToken();
         if(tokens.get(currentTokenIndex).getType().equals("L_brace")) {
-            //this.getNextToken();
             List<Node> arrayMembers = new LinkedList<>();
             while (true) {
                 Node memberNode = this.parseExpression();
@@ -404,7 +329,6 @@ public class Parser {
                     if (tokens.get(currentTokenIndex).getType().equals("R_brace")) {
                         this.getNextToken();
                         return new AssignNode(node, new ArrayNode(arrayMembers));
-//                    break;
                     }else if (!tokens.get(currentTokenIndex).getType().equals("Col")) {
                         this.printError(tokens.get(currentTokenIndex), ",");
                         this.skipToken("R_brace", "L_brace");
@@ -437,7 +361,6 @@ public class Parser {
             }else
                 arrayMember.setIndex(indexNode);
             nextToken = tokens.get(currentTokenIndex);
-//            this.getNextToken();
 
             node = arrayMember;
             if (!nextToken.getType().equals("R_square"))
@@ -448,22 +371,9 @@ public class Parser {
 
         if(tokens.get(currentTokenIndex).getType().equals("Assign")) {
             node = this.parseAssign(node);
-//            Node exprNode = this.parseExpression();
-//            //node = new AssignNode(node, this.parseExpression());
-//            if(exprNode != null)
-//                node = new AssignNode(node, exprNode);
-//            else if(tokens.get(currentTokenIndex - 1).getType().equals("OP_SUB")) {
-//                this.printError(tokens.get(currentTokenIndex), "Variable/Number/ArithExpression");
-//                this.getNextToken();
-//            }else if(tokens.get(currentTokenIndex).getType().equals("Str_lit")) {
-//                node = new AssignNode(node, new StrLitNode(tokens.get(currentTokenIndex).getLexeme()));
-//                this.getNextToken();
-//            }else
-//                this.printError(tokens.get(currentTokenIndex), "Variable/Number/ArithExpression/StringLiteral");
 
             if(!tokens.get(currentTokenIndex).getType().equals("Semi")) {
                 this.printError(tokens.get(currentTokenIndex), ";");
-//                this.skipToken("Semi");
             }
         }else {
             this.printError(tokens.get(currentTokenIndex), "=");
@@ -488,28 +398,9 @@ public class Parser {
             this.skipToken("R_paren", "L_paren");
 
             return null;
-//        }else if(tokens.get(currentTokenIndex).getType().equals("L_brace")){
-//            //this.getNextToken();
-//            List<Node> arrayMembers = new LinkedList<>();
-//            while(true){
-//                Node memberNode = this.parseExpression();
-//                if(memberNode != null)
-//                    arrayMembers.add(memberNode);
-//                if(tokens.get(currentTokenIndex).getType().equals("R_brace")) {
-//                    this.getNextToken();
-//                    return new AssignNode(node, new ArrayNode(arrayMembers));
-////                    break;
-//                }else if(!tokens.get(currentTokenIndex).getType().equals("Col")) {
-//                    this.printError(tokens.get(currentTokenIndex), ",");
-//                    this.skipToken("R_brace", "L_brace");
-//                    break;
-//                }
-//            }
-//            return null;
         }else
             currentTokenIndex--;
         Node exprNode = this.parseExpression();
-        //node = new AssignNode(node, this.parseExpression());
         if(exprNode != null)
             return new AssignNode(node, exprNode);
         else if(tokens.get(currentTokenIndex - 1).getType().equals("OP_SUB")) {
@@ -519,14 +410,12 @@ public class Parser {
             node = new AssignNode(node, new StrLitNode(tokens.get(currentTokenIndex).getLexeme(), tokens.get(currentTokenIndex)));
             this.getNextToken();
             return node;
-//        }else
         }else
             printError(tokens.get(currentTokenIndex), "Variable/Number/ArithExpression/StringLiteral");
         return null;
     }
 
     public Integer getArithOpPriority(){
-        //this.getNextToken();
         return ArithOpPriority.get(tokens.get(currentTokenIndex).getLexeme());
     }
 
@@ -535,7 +424,6 @@ public class Parser {
         if(operand == null && tokens.get(currentTokenIndex).getType().equals("OP_SUB")){
             operand = this.parseOperand();
             if(operand == null) {
-//                this.getNextToken();
                 return null;
             }
             operand = new ArithNode("-", new NumberNode(0), operand);
@@ -546,31 +434,15 @@ public class Parser {
                 return this.parseArith(priority, operand);
         }
         return operand;
-//        if(operand != null) {
-//            //this.getNextToken();
-//            Integer priority = this.getArithOpPriority();
-//            if (priority != null)
-//                return this.parseArith(priority, operand);
-//
-//            return operand;
-//        }else if(tokens.get(currentTokenIndex).getType().equals("OP_SUB")){
-//            operand = this.parseOperand();
-//            ArithNode node = new ArithNode("-", new NumberNode(0), operand);
-//            return this.parseArith(0, node);
-//        }
-
-//        return null;
     }
 
     public ArithNode parseArith(Integer priority, Node left){
 
         ArithNode node = new ArithNode(tokens.get(currentTokenIndex).getLexeme());
-//        tokens.get(currentTokenIndex).print();
         Node right = this.parseOperand();
         if(right == null)
             this.printError(tokens.get(currentTokenIndex), "Variable/Number/ArithExpression");
-//            return null;//ошибка
-//        }
+
         Integer nextOpPriority = this.getArithOpPriority();
         if(nextOpPriority == null){
             node.setLeft(left);
@@ -590,7 +462,6 @@ public class Parser {
     public Node parseOperand(){//считывает следующий токен если возвращает не null
         this.getNextToken();
         Token currentToken = tokens.get(currentTokenIndex);
-        //currentToken.print();
 
         if(currentToken.getType().equals("Identifier")) {
             this.getNextToken();
@@ -641,15 +512,12 @@ public class Parser {
                 }
                 this.skipToken("R_paren", "L_paren");
 
-            }//else
+            }
                 return new VariableNode(currentToken);
         }else if(currentToken.getType().matches("Num.*")){
             this.getNextToken();
             return new NumberNode(currentToken.getInt(), currentToken.getLine(), currentToken.getPos());
         }
-        //else if(currentToken.getType().equals("OP_SUB"))
-
-        //this.printError(currentToken, "Variable/Number/ArithExpression");
         return null;
     }
 }

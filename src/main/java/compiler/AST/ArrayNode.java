@@ -12,10 +12,6 @@ public class ArrayNode extends Node {
         this.type = "Array";
     }
 
-//    public String getNodeType(){
-//        return "Array";
-//    }
-
     public void makeSymTab(int level){
         Id id = symbolTable.getVariable(initVarName);
         int arrayOffset = members.size() * 4;
@@ -30,14 +26,10 @@ public class ArrayNode extends Node {
             String rightOperand = member.makeASM();
             switch (member.getType()){
                 case "Number":
-//                command = "\tmov     " + leftOperand + ", " + rightOperand + "\n";
-//                System.out.println(command);
                     asm.addMainCommand("\tmov     " + leftOperand + ", " + rightOperand + "\n");
                     break;
                 case "Variable":
-//                command = "\tmov     eax, " + rightOperand + "\n";
                     asm.addMainCommand("\tmov     eax, " + rightOperand + "\n");
-//                command = "\tmov     " + leftOperand + ", eax\n";
                     asm.addMainCommand("\tmov     " + leftOperand + ", eax\n");
                     break;
                 case "Arith":

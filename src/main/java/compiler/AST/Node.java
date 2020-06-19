@@ -4,7 +4,6 @@ import compiler.ASM;
 import compiler.SymbolTable;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public abstract class Node {
     protected static SymbolTable symbolTable = new SymbolTable();
@@ -21,11 +20,8 @@ public abstract class Node {
     protected static LinkedList<Integer> ifEndLabelNumberList = new LinkedList<>();
     protected static int beginLabelForBoolExpr;
     protected static int endLabelForBoolExpr;
-//    protected static String initArrayOffset = "";
     public abstract void printNode(int level);
-//    public abstract boolean getNodeType();
     public abstract void makeSymTab(int level);
-//    public abstract void makeASM();
     public abstract String makeASM();
 
     public void setType(String type) {
@@ -52,7 +48,5 @@ public abstract class Node {
     public int symbolTableCheckError(){
         return SymbolTable.getError();
     }
-//    public void printASM(){
-//        asm.print();
-//    }
+
 }

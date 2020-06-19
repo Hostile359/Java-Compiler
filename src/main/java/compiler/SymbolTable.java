@@ -6,7 +6,6 @@ import java.util.LinkedList;
 public class SymbolTable {
     private SymbolTable prevLevelTable;
     private int nextLevelTableIndex;
-//    private HashMap<String, LinkedList<Id>> symbolTable;
     private HashMap<String, Id> symbolTable;
     private LinkedList<SymbolTable> nextLevelTables;
     private static int error;//0-не было встречено ошибок, 1 были
@@ -38,19 +37,13 @@ public class SymbolTable {
     public SymbolTable getNextLevelTable(){
         nextLevelTableIndex++;
         return nextLevelTables.get(nextLevelTableIndex - 1);
-//        return nextLevelTables.getLast();
     }
 
     public SymbolTable getPrevLevelTable(){
         if(symbolTable.size() == 0){
             symbolTable.put(null, new Id(null, "", 0, false));
         }
-//            prevLevelTable.nextLevelTables.pop();
         return prevLevelTable;
-    }
-
-    public void setInit(String name){
-        this.getVariable(name).setInit(true);
     }
 
     public Id getVariable(String name){
@@ -63,6 +56,10 @@ public class SymbolTable {
         return variable;
     }
 
+    public String getAsmOffset(){
+        return String.valueOf(Id.getGlobalAsmOffset());
+    }
+
     public static void setError() {
         SymbolTable.error = 1;
     }
@@ -72,31 +69,12 @@ public class SymbolTable {
     }
 
     public boolean add(String name, Id variable){
-//        Id id = this.getVariable(name);
         if(this.getVariable(name) != null) {
             setError();
             return false;
         }
-
         symbolTable.put(name, variable);
         return true;
-//        LinkedList<Id> idList = symbolTable.get(name);
-//        if(idList == null) {
-//            idList = new LinkedList<>();
-//            idList.add(variable);
-//            symbolTable.put(name, idList);
-//            return true;
-//        }else{
-//            for(Id id : idList){
-//                if(variable.getLevel() >= id.getLevel()) {
-//                    error = 1;
-//                    return false;
-//                }
-//            }
-//            idList.addFirst(variable);
-//
-//            return true;
-//        }
     }
 
     public void print(){
@@ -108,10 +86,6 @@ public class SymbolTable {
             System.out.println("---------------------------------------------------");
             table.print();
         });
-//        nextLevelTables.forEach(SymbolTable::print);
-//        symbolTable.values().forEach(symbols ->{
-//            symbols.forEach(Id::print);
-//        });
     }
 
 }

@@ -9,14 +9,6 @@ public class TypeNode extends Node {
         this.type = "Type";
     }
 
-//    public String getNodeType(){
-//        return "Type";
-//    }
-
-//    public String getType() {
-//        return type;
-//    }
-
     public Node getVariable() {
         return variable;
     }

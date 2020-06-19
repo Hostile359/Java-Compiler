@@ -14,28 +14,14 @@ public class CallFuncNode extends Node {
         this.arg = arg;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Node getArg() {
-        return arg;
-    }
-
-//    public String getNodeType(){
-//        return "CallFunc";
-//    }
-
     public void makeSymTab(int level){
         typeForCheck = "int/String";
         if(arg != null)
             arg.makeSymTab(level);
         typeForCheck = "def";
-        //else if(typeForCheck.equals("int") || typeForCheck.equals("String"))
-
     }
 
-    public String makeASM(){//не хватает стринговых перемен, массивов
+    public String makeASM(){
         if(arg != null){
             switch (arg.getType()){
                 case "Variable":
@@ -82,7 +68,6 @@ public class CallFuncNode extends Node {
                     }
                     break;
                 case "Number":
-//                    break;
                 case "StrLit":
                     String argValue = arg.makeASM();
                     String label = ".LC" + String.valueOf(asmStringsInc);

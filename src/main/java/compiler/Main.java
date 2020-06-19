@@ -23,7 +23,6 @@ public class Main{
         try{
             Lexer lexer = new Lexer();
             List<Token> toks = lexer.lex(filename);
-            //lexer.print_Tokens();
 
             if(option.equals("--dump-tokens")) {
                 lexer.print_Tokens();
@@ -31,25 +30,23 @@ public class Main{
             }
             Parser parser = new Parser(toks);
             Node AST_tree = parser.parse();
-            if(option.equals("--dump-ast")) {
-                parser.printAST();
-                return;
-            }
-            parser.printAST();
             if(AST_tree == null)
                 return;
 
             AST_tree.makeSymTab(0);
-            AST_tree.printSymTable();
 
+            if(option.equals("--dump-ast")) {
+                parser.printAST();
+                AST_tree.printSymTable();
+                return;
+            }
             if(AST_tree.symbolTableCheckError() == 1)
                 return;
-//            ASM asm = new ASM();
-            System.out.println();
+
             String asm = AST_tree.makeASM();
             if(option.equals("--dump-asm"))
                 System.out.println(asm);
-            //else {
+            else {
                 Process compile = Runtime.getRuntime().exec("mkdir ASM");
                 compile.waitFor();
                 compile.destroy();
@@ -63,8 +60,7 @@ public class Main{
                 compile.waitFor();
                 compile.destroy();
 
-           // }
-//                AST_tree.printASM();
+            }
 
         }catch(IOException | InterruptedException er){
             System.err.println(er);

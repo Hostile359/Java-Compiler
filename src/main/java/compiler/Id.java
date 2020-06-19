@@ -8,11 +8,6 @@ public class Id {
     private static int globalAsmOffset = 0;
     private int asmOffset;
 
-//    public Id(String name, String type, int level) {
-//        this.name = name;
-//        this.type = type;
-//        this.level = level;
-//    }
 
     public Id(String name, String type, int level, boolean isInit) {
         this.name = name;
@@ -31,8 +26,11 @@ public class Id {
             default:
                 this.asmOffset = 0;
         }
-        //globalAsmOffset += this.asmOffset;
+    }
 
+    public static int getGlobalAsmOffset() {
+        globalAsmOffset += 4;
+        return globalAsmOffset;
     }
 
     public String getName() {

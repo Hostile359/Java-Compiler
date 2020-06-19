@@ -5,20 +5,8 @@ import compiler.SymbolTable;
 import compiler.Token;
 
 public class VariableNode extends Node {
-//    private String name;
     protected Token token;
     private MethodNode method;
-
-//    public VariableNode(String name){
-//        this.name = name;
-//        method = null;
-//    }
-//
-//    public VariableNode(String name, MethodNode method){
-//        this.name = name;
-//        this.method = method;
-//    }
-
 
     public VariableNode(Token token) {
         this.token = token;
@@ -32,18 +20,6 @@ public class VariableNode extends Node {
         this.type = "Variable";
     }
 
-    public void setMethod(MethodNode method) {
-        this.method = method;
-    }
-
-//    public String getName() {
-//        return name;
-//    }
-
-    public MethodNode getMethod() {
-        return method;
-    }
-
     public void makeSymTab(int level){
         Id id = symbolTable.getVariable(token.getLexeme());
         if(id == null) {
@@ -51,7 +27,6 @@ public class VariableNode extends Node {
             System.out.println("Error at <" + token.getLine() + ":" + token.getPos() + ">" + ": variable '" + token.getLexeme() + "' isn't declared in this scope.");
         }else if(id.getType().equals("int array")){
             SymbolTable.setError();
-            //System.out.println("!!!!- " + initVarName);
             System.out.println("Error at <" + token.getLine() + ":" + token.getPos() + ">" + ": variable '" + token.getLexeme() + "' using array pointer without index.");
         }else if(isInit){
             typeForCheck = id.getType();
@@ -60,7 +35,6 @@ public class VariableNode extends Node {
             id.setInit(true);
         }else if(!id.isInit() || token.getLexeme().equals(initVarName)){
             SymbolTable.setError();
-            //System.out.println("!!!!- " + initVarName);
             System.out.println("Error at <" + token.getLine() + ":" + token.getPos() + ">" + ": variable '" + token.getLexeme() + "' isn't initialized.");
         }else if(method == null && !id.getType().equals(typeForCheck) && !typeForCheck.equals("int/String")){
             SymbolTable.setError();
@@ -76,9 +50,6 @@ public class VariableNode extends Node {
 
             method.makeSymTab(level);
         }
-//        System.out.println(SymbolTable.getError() +" at <" + token.getLine() + ":" + token.getPos() + ">");
-//        if(!symbolTable.add(token.getLexeme(), id))
-//            System.out.println("Error line " + token.getLine() + ": variable '" + token.getLexeme() + "' is already exist in this scope.");
     }
 
     public void makeSymTab(int level, String type){
@@ -90,10 +61,6 @@ public class VariableNode extends Node {
         if(!symbolTable.add(token.getLexeme(), id))
             System.out.println("Error at <" + token.getLine() + ":" + token.getPos()  + ">" + ": variable '" + token.getLexeme() + "' is already exist in this scope.");
     }
-
-//    public void makeSymTab(String type, int level){
-//
-//    }
 
     public String makeASM(){
         if(method == null){
@@ -110,13 +77,12 @@ public class VariableNode extends Node {
                     break;
             }
             return addres;
+        }else {
+            String offset = String.valueOf(symbolTable.getVariable(token.getLexeme()).getAsmOffset());
+            String address = "QWORD PTR [rbp-" + offset + "]";
+            return method.makeASM(address);
         }
-        return "";
     }
-
-//    public String getNodeType(){
-//        return "Variable";
-//    }
 
     public void printNode(int level){
         printTabs(level);

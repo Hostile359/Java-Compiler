@@ -8,10 +8,6 @@ public class OperatorNode extends Node {
         this.type = "Operator";
     }
 
-//    public String getNodeType(){
-//        return "Operator";
-//    }
-
     public void makeSymTab(int level){
     }
 

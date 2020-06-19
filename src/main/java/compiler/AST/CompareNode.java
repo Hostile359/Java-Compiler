@@ -1,9 +1,6 @@
 package compiler.AST;
 
 public class CompareNode extends BinNode {
-//    private String op;
-//    private Node left;
-//    private Node right;
 
     public CompareNode(String op){
         this.op = op;
@@ -19,25 +16,6 @@ public class CompareNode extends BinNode {
         this.type = "Compare";
     }
 
-//    public void setLeft(Node node){
-//        this.left = node;
-//    }
-//
-//    public void setRight(Node node){
-//        this.right = node;
-//    }
-
-//    public String getNodeType(){
-//        return "Compare";
-//    }
-
-//    public void makeSymTab(int level){
-//        if(left != null)
-//            left.makeSymTab(level);
-//        if(right != null)
-//            right.makeSymTab(level);
-//    }
-
     public String makeASM(){
         String leftOperand = left.makeASM();
         String leftOperandIndex = "0";
@@ -50,18 +28,17 @@ public class CompareNode extends BinNode {
             rightOperandIndex = asmIndex;
         asmIndex = "0";
 
-        if(leftOperand.contains("rax"))
+        if(!leftOperandIndex.equals("0"))
             asm.addMainCommand(leftOperandIndex);
-        asm.addMainCommand("\tmov     edx, " + leftOperand + "\n");
-        if(rightOperand.contains("rax"))
+        asm.addMainCommand("\tmov     ebx, " + leftOperand + "\n");
+        if(!rightOperandIndex.equals("0"))
             asm.addMainCommand(rightOperandIndex);
         asm.addMainCommand("\tmov     eax, " + rightOperand + "\n");
-        asm.addMainCommand("\tcmp     edx, eax\n");
+        asm.addMainCommand("\tcmp     ebx, eax\n");
         switch (op){
             case "==":
                 return "jne";
             case "!=":
-//                asm.addMainCommand("\tjne\n");
                 return "je";
             case "<=":
                 return "jg";
