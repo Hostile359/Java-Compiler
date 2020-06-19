@@ -1,14 +1,16 @@
 # Java-Compiler
 ### Build compiler
-#### First time
-```
-mvn compile
-```
-#### Second time
 ```
 mvn package
 ```
-
+#### Build without tests
+```
+mvn package -DskipTests=true
+```
+#### Run tests without building project
+```
+mvn test
+```
 ### Run compiler
 ```
 java -jar target/compiler-1.0.jar [Options] <input_file>
