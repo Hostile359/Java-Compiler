@@ -25,7 +25,7 @@ public class LexerTest {
             writer.close();
             expected_tokens.add(new Token("int", "int", 1, 0));
             expected_tokens.add(new Token("Identifier", "a", 1, 4));
-            expected_tokens.add(new Token("Assigment", "=", 1, 6));
+            expected_tokens.add(new Token("Assign", "=", 1, 6));
             expected_tokens.add(new Token("Num", "10", 1, 8));
             expected_tokens.add(new Token("OP_ADD", "+", 1, 11));
             expected_tokens.add(new Token("Num_16", "0x55f", 1, 13));
