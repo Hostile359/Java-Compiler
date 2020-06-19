@@ -48,5 +48,8 @@ public abstract class Node {
     public int symbolTableCheckError(){
         return SymbolTable.getError();
     }
+    public void clearSymTable(){
+        symbolTable = new SymbolTable();
+    }
 
 }
