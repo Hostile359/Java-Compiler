@@ -1,14 +1,13 @@
 //dgfdfd
 //dgf
  void main() {
-        int a = 100;
+        int a = System.in.read();
         int b = System.in.read();
-        while (b !=0) {
+        while (b != 0) {
             int tmp = a % b;
             a = b;
             b = tmp;
         }
 
-        System.out.print(a);
-        System.out.print("dsgs");
+        System.out.println(a);
     }

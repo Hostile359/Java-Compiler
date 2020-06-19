@@ -1,7 +1,7 @@
  void main() {
 
-        String str = "asdfs=aasg";
-        String substr = System.in.read();
+        String str = "Hello World";
+        String substr = "llo";
         int n = str.length();
         int i = 0;
         int index = -1;
@@ -15,7 +15,7 @@
                         index = -1;
                         break;
                     }
-                    j = i + 1;
+                    j = j + 1;
                     i = i + 1;
                 }
                 if(index != -1){

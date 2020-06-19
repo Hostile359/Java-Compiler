@@ -1,6 +1,6 @@
 void main() {
         int n = 5;
-        int []a = {1, 3, 7, -867, 64};
+        int []a = {10, 30, 7, n, 64};
         int i = 1;
         int min = a[0];
         while (i < 5) {
@@ -10,5 +10,5 @@ void main() {
             i = i + 1;
         }
 
-        System.out.print(min);
-    }cl
+        System.out.println(min);
+    }
