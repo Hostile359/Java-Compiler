@@ -192,12 +192,6 @@ public class Lexer {
                 return new Token("continue", "continue", this.line, start);
             case "String":
                 return new Token("String", "String", this.line, start);
-            case "public":
-                return new Token("public", "public", this.line, start);
-            case "class":
-                return new Token("class", "class", this.line, start);
-            case "static":
-                return new Token("static", "static", this.line, start);
             case "void":
                 return new Token("void", "void", this.line, start);
 
